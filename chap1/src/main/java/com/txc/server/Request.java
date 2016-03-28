@@ -14,20 +14,14 @@ public class Request {
         String line;
         try{
             line = reader.readLine();//拿到http请求的第一行
+            System.out.println(line);
             parseURI(line);
+            while (!"".equals(line = reader.readLine())){
+                System.out.println(line);
+            }
         }catch (Exception e){
             e.printStackTrace();
             System.exit(-1);
-        }finally {
-            if(inputStream != null){
-                try{
-                    inputStream.close();
-                    reader.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    System.exit(-1);
-                }
-            }
         }
     }
 
@@ -41,7 +35,7 @@ public class Request {
         if(index1 != -1){
             int index2 = httpFirstLine.indexOf(separator,index1 + 1);
             if( index2 != -1){
-                URI = httpFirstLine.substring(index1 + 1,index2);
+                URI = httpFirstLine.substring(index1 + 2,index2);
             }
         }
 

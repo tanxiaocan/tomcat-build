@@ -1,6 +1,7 @@
 package com.txc.server;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,15 +25,22 @@ public class HttpServer {
             Socket socket = null;
             try{
                 socket = serverSocket.accept();
-                socket.getInputStream();
                 InputStream in = socket.getInputStream();
+                Request request = new Request();
+                request.parse(in);
+                OutputStream out = socket.getOutputStream();
+                Response response = new Response(out);
+                response.sendStaticResource();
+                socket.close();
+                shutdown = SHUTDOWN_COMMAND.equals(request.getURI());
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-
-
     }
 
-
+    public static void main(String args[]){
+        HttpServer httpServer = new HttpServer();
+        httpServer.await(8080,1,"localhost");
+    }
 }
