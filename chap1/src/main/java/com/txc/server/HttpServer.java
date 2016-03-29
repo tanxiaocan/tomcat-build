@@ -11,7 +11,7 @@ import java.net.Socket;
  */
 public class HttpServer {
     private final static String SHUTDOWN_COMMAND = "shutdown";
-    private boolean shutdown = false;
+    private volatile boolean shutdown = false;
 
     public void await(int port, int backlog,String hostName){
         ServerSocket serverSocket = null;

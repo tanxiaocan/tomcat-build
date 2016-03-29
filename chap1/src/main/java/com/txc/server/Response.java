@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 
 /**
  * Created by tanxiaocan on 2016/3/28.
@@ -16,7 +15,8 @@ public class Response {
     }
 
     public void sendStaticResource(){
-        String errorFilePath = System.getProperty("user.dir") + File.separator + "error.html";
+        String rootPath = System.getProperty("user.dir") + File.separator + "webroot";
+        String errorFilePath = rootPath + File.separator + "error.html";
         File file = new File(errorFilePath);
         if(file.exists()){
             FileInputStream in = null;
