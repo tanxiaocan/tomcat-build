@@ -1,9 +1,6 @@
 package com.txc.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * Created by tanxiaocan on 2016/3/28.
@@ -20,23 +17,33 @@ public class Response {
         File file = new File(errorFilePath);
         if(file.exists()){
             FileInputStream in = null;
+            BufferedReader br = null;
+            PrintWriter pw = null;
             try{
                 in = new FileInputStream(file);
-                int c = -1;
-                byte[] buffer = new byte[1024];
-                c = in.read(buffer,0,1024);
-                while(c != -1){
-                    outputStream.write(buffer);
-                    c = in.read(buffer,0,1024);
+//                int c = -1;
+//                byte[] buffer = new byte[1024];
+//                c = in.read(buffer,0,1024);
+//                while(c != -1){
+//                    outputStream.write(buffer);
+//                    c = in.read(buffer,0,1024);
+//                }
+                br = new BufferedReader(new InputStreamReader(in));
+                String line = br.readLine();
+                pw = new PrintWriter(outputStream);
+                while (line != null){
+                    pw.println(line);
+                    line = br.readLine();
                 }
+                pw.flush();
             }catch (Exception e){
                 e.printStackTrace();
                 System.exit(-1);
             }finally {
                 if(in != null){
                     try {
-                        in.close();
                         outputStream.close();
+                        in.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
