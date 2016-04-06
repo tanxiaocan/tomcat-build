@@ -1,5 +1,4 @@
-tomcat-build.iml
+*.iml
 .idea
 .gradle
-chap1.iml
 build

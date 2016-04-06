@@ -1,5 +1,7 @@
 package com.txc.server;
 
+import com.sun.deploy.util.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,10 +16,10 @@ public class Request {
         String line;
         try{
             line = reader.readLine();//拿到http请求的第一行
-            System.out.println(line);
             parseURI(line);
-            while (!"".equals(line = reader.readLine())){
+            while (line != null && !"".equals(line)){
                 System.out.println(line);
+                line = reader.readLine();
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -30,12 +32,16 @@ public class Request {
      * @param httpFirstLine
      */
     private void parseURI(String httpFirstLine){
+        if(httpFirstLine == null){
+            URI = "";
+            return;
+        }
         String separator = " ";
         int index1 = httpFirstLine.indexOf(separator);
         if(index1 != -1){
             int index2 = httpFirstLine.indexOf(separator,index1 + 1);
             if( index2 != -1){
-                URI = httpFirstLine.substring(index1 + 2,index2);
+                URI = httpFirstLine.substring(index1 + 1,index2);
             }
         }
 

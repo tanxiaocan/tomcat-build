@@ -1,5 +1,7 @@
 package com.txc.server;
 
+import com.txc.server.utils.StringUtils;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -10,7 +12,7 @@ import java.net.Socket;
  * Created by xiaocantan on 2016/3/28.
  */
 public class HttpServer {
-    private final static String SHUTDOWN_COMMAND = "shutdown";
+    private final static String SHUTDOWN_COMMAND = "/shutdown";
     private volatile boolean shutdown = false;
 
     public void await(int port, int backlog,String hostName){
@@ -28,8 +30,11 @@ public class HttpServer {
                 InputStream in = socket.getInputStream();
                 Request request = new Request();
                 request.parse(in);
+                if(StringUtils.isEmpty(request.getURI())){
+                    continue;
+                }
                 OutputStream out = socket.getOutputStream();
-                Response response = new Response(out);
+                Response response = new Response(out,request);
                 response.sendStaticResource();
                 socket.close();
                 shutdown = SHUTDOWN_COMMAND.equals(request.getURI());
@@ -41,6 +46,6 @@ public class HttpServer {
 
     public static void main(String args[]){
         HttpServer httpServer = new HttpServer();
-        httpServer.await(8080,1,"localhost");
+        httpServer.await(8080,3,"localhost");
     }
 }
